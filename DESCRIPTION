@@ -1,0 +1,13 @@
+Package: mkbaseball
+Title: Build Hidden Markov Models using Baseball Savant Pitching Data
+Version: 0.0.0.9000
+Authors@R: 
+    person("Emma", "Strawbridge", , "estrawbridge@umass.edu", role = c("aut", "cre"))
+Description: This package contains all the functions required to complete a STATISTIC 535 project covering (some of) my senior thesis work at Amherst College, using hidden Markov models to predict pitch patterns. This package uses sequences based on single at-bats for individual pitchers, with hidden states being pitches and observed states being balls-strikes counts.
+License: use_mit_license()
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Depends: 
+    R (>= 3.5)
+LazyData: true
