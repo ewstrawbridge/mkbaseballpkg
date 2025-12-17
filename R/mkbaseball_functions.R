@@ -419,6 +419,8 @@ evaluate_viterbi <- function(vpred_list, varhide, varobs, typet) {
 
       df <- df %>% add_row(outing=i, hd=hd, ds=ds, sw=sw)
     }
+    df <- na.omit(df)
+    colnames(df) <- c('outing', 'hd', 'ds', 'sw')
   }
 
   return(df)
