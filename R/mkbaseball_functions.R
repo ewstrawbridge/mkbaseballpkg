@@ -197,7 +197,7 @@ get_listg <- function(lst_train, varb) {
 #' This function produces a transition matrix between variables given a list of at-bats to be used in the HMM.
 #' @param lst_got training list obtained from `get_listg()`.
 #' @keywords transition
-#' @export train_df
+#' @export get_tprobg
 
 get_tprobg <- function(lst_got) {
   mkfit <- markovchainFit(lst_got)
