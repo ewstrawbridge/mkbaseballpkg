@@ -390,11 +390,11 @@ evaluate_viterbi <- function(vpred_list, varhide, varobs, typet) {
 
     vpredded <- vpred_list[[i]]
     if(!is.null(vpredded)) {
-      if(typet != "all" & varobs == "ct_digit") {
+      if(typet != "all" & varobs == "ct") {
         ezid <- data.frame(ct = countfull, ct_digit = 1:12)
         tofilter <- filter(ezid, ct == typet)$ct_digit
         vpredded <- filter(vpredded, ct_digit == tofilter)
-      } else if(typet != "all" & varobs == "ct_red_digit") {
+      } else if(typet != "all" & varobs == "ct_red") {
         ezid <- data.frame(ct = counthalf, ct_red_digit = 1:4)
         tofilter <- filter(ezid, ct == typet)$ct_red_digit
         vpredded <- filter(vpredded, ct_red_digit == tofilter)
@@ -555,13 +555,13 @@ assess_models <- function(final_list, typ) {
   for(i in 1:length(final_list)) {
     if(typ == "full") {
       evald <- final_list[[i]][[13]]
-    } else if(typ == "0-0") {
+    } else if(typ == "0_0") {
       evald <- final_list[[i]][[14]]
-    } else if(typ == "0-2" | typ == "even") {
+    } else if(typ == "0_2" | typ == "even") {
       evald <- final_list[[i]][[15]]
-    } else if(typ == "3-0" | typ == "hitr") {
+    } else if(typ == "3_0" | typ == "hitters_ct") {
       evald <- final_list[[i]][[16]]
-    } else if(typ == "3-2" | typ == "pitchr") {
+    } else if(typ == "3_2" | typ == "pitchers_ct") {
       evald <- final_list[[i]][[17]]
     }
     new_row <- c(pitcher=final_list[[i]][[1]], mean(na.omit(evald$hd)), mean(na.omit(evald$ds)), mean(na.omit(evald$sw)))
