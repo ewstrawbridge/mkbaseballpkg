@@ -629,7 +629,7 @@ read_data_in <- function(names_list) {
 #' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables.
 #' @param names_list list of filepath names.
 #' @keywords read
-#' @export read_data_in
+#' @export read_data_in_match
 
 read_data_in_match <- function(names_list) {
   tts_list <- list()
@@ -644,7 +644,7 @@ read_data_in_match <- function(names_list) {
 #' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables.
 #' @param names_list list of filepath names.
 #' @keywords read
-#' @export read_data_in
+#' @export read_data_in_off
 
 read_data_in_off <- function(names_list) {
   tts_list <- list()
