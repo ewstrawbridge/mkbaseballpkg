@@ -634,7 +634,7 @@ read_data_in <- function(names_list) {
 read_data_in_match <- function(names_list) {
   tts_list <- list()
   for(i in 1:length(names_list)) {
-    tts_list[[i]] <- train_test_split(names_list[[i]])
+    tts_list[[i]] <- train_test_split_match(names_list[[i]])
   }
   return(tts_list)
 }
@@ -649,7 +649,7 @@ read_data_in_match <- function(names_list) {
 read_data_in_off <- function(names_list) {
   tts_list <- list()
   for(i in 1:length(names_list)) {
-    tts_list[[i]] <- train_test_split(names_list[[i]])
+    tts_list[[i]] <- train_test_split_off(names_list[[i]])
   }
   return(tts_list)
 }
