@@ -71,9 +71,9 @@ data_clean <- function(file) {
 #' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat.
 #' @param file filename from your wokring directory, ex '/data/wheeler.csv'.
 #' @keywords clean
-#' @export data_clean
+#' @export data_clean_match
 
-data_clean <- function(file) {
+data_clean_match <- function(file) {
   df <- read.csv(file) %>%
     select(player_name, batter, game_type, pitch_type, balls, strikes, stand, p_throws) %>%
     # we only want regular season games and match sides
@@ -139,9 +139,9 @@ data_clean <- function(file) {
 #' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat.
 #' @param file filename from your wokring directory, ex '/data/wheeler.csv'.
 #' @keywords clean
-#' @export data_clean
+#' @export data_clean_off
 
-data_clean <- function(file) {
+data_clean_off <- function(file) {
   df <- read.csv(file) %>%
     select(player_name, batter, game_type, pitch_type, balls, stand, p_throws) %>%
     # we only want regular season games and off sides
@@ -275,9 +275,9 @@ train_test_split <- function(filename) {
 #' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list.
 #' @param filename large list shuffled using `split_shuffle()`.
 #' @keywords split
-#' @export train_test_split
+#' @export train_test_split_match
 
-train_test_split <- function(filename) {
+train_test_split_match <- function(filename) {
   babylist <- list()
   clean_df <- data_clean_match(filename)
   shuffled <- split_shuffle(clean_df)
@@ -298,9 +298,9 @@ train_test_split <- function(filename) {
 #' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list.
 #' @param filename large list shuffled using `split_shuffle()`.
 #' @keywords split
-#' @export train_test_split
+#' @export train_test_split_off
 
-train_test_split <- function(filename) {
+train_test_split_off <- function(filename) {
   babylist <- list()
   clean_df <- data_clean_off(filename)
   shuffled <- split_shuffle(clean_df)
