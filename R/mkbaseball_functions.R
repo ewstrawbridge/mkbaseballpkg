@@ -66,6 +66,143 @@ data_clean <- function(file) {
   return(df)
 }
 
+#' A Data Cleaning Function FOR MATCH SIDES
+#'
+#' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat.
+#' @param file filename from your wokring directory, ex '/data/wheeler.csv'.
+#' @keywords clean
+#' @export data_clean
+
+data_clean <- function(file) {
+  df <- read.csv(file) %>%
+    select(player_name, batter, game_type, pitch_type, balls, strikes, stand, p_throws) %>%
+    # we only want regular season games and match sides
+    filter(game_type == "R", stand == p_throws) %>%
+    # getting my variables in order
+    mutate(ct = paste(balls, strikes, sep = "_"),
+           ct_red = case_when(
+             ct == "1_0" | ct == "2_0" | ct == "3_0" |
+               ct ==  "2_1" | ct ==  "3_1" | ct ==  "3_2" ~ "pitchers_ct",
+             ct == "0_1" | ct == "0_2" | ct == "1_2"  ~ "hitters_ct",
+             ct == "1_1" | ct == "2_2" ~ "even_ct",
+             .default = as.character(ct)),
+           pitch = pitch_type,
+           pitch_red1 = case_when(
+             pitch == "FF" ~ "fast",
+             pitch == "SI" | pitch == "FS" | pitch == "CH" ~ "sink_split",
+             pitch == "CU" | pitch == "KC" ~ "curve",
+             pitch == "ST" | pitch == "SL" | pitch == "FC" ~ "cut_sweep",
+             .default = as.character(pitch)),
+           pitch_red2 = ifelse(pitch=="FF", "fast", "offspeed"),
+           aber = 0
+    )
+  # re-order dataset the other way so i'm counting correctly
+  df <- df[order(nrow(df):1),]
+  # index for each at-bat
+  j <- 0
+  for(i in 2:nrow(df)) {
+    if(df$batter[i] == df$batter[i-1]) {
+      df$aber[i] <- j
+    } else {
+      j <- j+1
+      df$aber[i] <- j
+    }
+  }
+  df <- df %>%
+    # pitchcount refers to count of pitches through an at-bat
+    mutate(pitchcount = ave(as.character(aber), as.character(aber), FUN=seq_along)) %>%
+    filter(pitch_type != "") %>%
+    filter(pitch_type != "IN") %>% # unsure what these are, but we're removing them.
+    filter(pitch_type != "PO")
+  # checking to make sure that we don't have pitches that are only thrown a couple of times
+  # usually it's not an issue
+  dfcts <- df %>%
+    select(pitch) %>%
+    group_by(pitch) %>%
+    summarize(pitches=n()) %>%
+    filter(pitches <= 10)
+
+  named <- dfcts$pitch
+
+  # if it's an issue, we remove the pitches and tell the user what was cut out
+  if(nrow(dfcts) != 0 ) {
+    df <- df %>%
+      filter(pitch != named)
+    print(paste0("cut pitch ", named))
+  }
+
+  return(df)
+}
+
+#' A Data Cleaning Function FOR OFF SIDES
+#'
+#' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat.
+#' @param file filename from your wokring directory, ex '/data/wheeler.csv'.
+#' @keywords clean
+#' @export data_clean
+
+data_clean <- function(file) {
+  df <- read.csv(file) %>%
+    select(player_name, batter, game_type, pitch_type, balls, stand, p_throws) %>%
+    # we only want regular season games and off sides
+    filter(game_type == "R", stand == p_throws) %>%
+    # getting my variables in order
+    mutate(ct = paste(balls, strikes, sep = "_"),
+           ct_red = case_when(
+             ct == "1_0" | ct == "2_0" | ct == "3_0" |
+               ct ==  "2_1" | ct ==  "3_1" | ct ==  "3_2" ~ "pitchers_ct",
+             ct == "0_1" | ct == "0_2" | ct == "1_2"  ~ "hitters_ct",
+             ct == "1_1" | ct == "2_2" ~ "even_ct",
+             .default = as.character(ct)),
+           pitch = pitch_type,
+           pitch_red1 = case_when(
+             pitch == "FF" ~ "fast",
+             pitch == "SI" | pitch == "FS" | pitch == "CH" ~ "sink_split",
+             pitch == "CU" | pitch == "KC" ~ "curve",
+             pitch == "ST" | pitch == "SL" | pitch == "FC" ~ "cut_sweep",
+             .default = as.character(pitch)),
+           pitch_red2 = ifelse(pitch=="FF", "fast", "offspeed"),
+           aber = 0
+    )
+  # re-order dataset the other way so i'm counting correctly
+  df <- df[order(nrow(df):1),]
+  # index for each at-bat
+  j <- 0
+  for(i in 2:nrow(df)) {
+    if(df$batter[i] == df$batter[i-1]) {
+      df$aber[i] <- j
+    } else {
+      j <- j+1
+      df$aber[i] <- j
+    }
+  }
+  df <- df %>%
+    # pitchcount refers to count of pitches through an at-bat
+    mutate(pitchcount = ave(as.character(aber), as.character(aber), FUN=seq_along)) %>%
+    filter(pitch_type != "") %>%
+    filter(pitch_type != "IN") %>% # unsure what these are, but we're removing them.
+    filter(pitch_type != "PO")
+  # checking to make sure that we don't have pitches that are only thrown a couple of times
+  # usually it's not an issue
+  dfcts <- df %>%
+    select(pitch) %>%
+    group_by(pitch) %>%
+    summarize(pitches=n()) %>%
+    filter(pitches <= 10)
+
+  named <- dfcts$pitch
+
+  # if it's an issue, we remove the pitches and tell the user what was cut out
+  if(nrow(dfcts) != 0 ) {
+    df <- df %>%
+      filter(pitch != named)
+    print(paste0("cut pitch ", named))
+  }
+
+  return(df)
+}
+
+
 #' A Shuffler
 #'
 #' This function takes in a dataframe cleaned using `data_clean()` and simply shuffles the orders of the at-bats.
@@ -120,6 +257,52 @@ test_df <- function(shuffs) {
 train_test_split <- function(filename) {
   babylist <- list()
   clean_df <- data_clean(filename)
+  shuffled <- split_shuffle(clean_df)
+  trained_df <- train_df(shuffled)
+  tester_df <- test_df(shuffled)
+  base_name <- clean_df$player_name[1]
+  list_names <- c("base_name", "clean_df", "trained_df", "tester_df")
+
+  for(j in 1:length(list_names)) {
+    babylist[[j]] <- get(list_names[j])
+  }
+  print(base_name)
+  return(babylist)
+}
+
+#' A Train/Test Splitter FOR MATCH SIDES
+#'
+#' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list.
+#' @param filename large list shuffled using `split_shuffle()`.
+#' @keywords split
+#' @export train_test_split
+
+train_test_split <- function(filename) {
+  babylist <- list()
+  clean_df <- data_clean_match(filename)
+  shuffled <- split_shuffle(clean_df)
+  trained_df <- train_df(shuffled)
+  tester_df <- test_df(shuffled)
+  base_name <- clean_df$player_name[1]
+  list_names <- c("base_name", "clean_df", "trained_df", "tester_df")
+
+  for(j in 1:length(list_names)) {
+    babylist[[j]] <- get(list_names[j])
+  }
+  print(base_name)
+  return(babylist)
+}
+
+#' A Train/Test Splitter FOR OFF SIDES
+#'
+#' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list.
+#' @param filename large list shuffled using `split_shuffle()`.
+#' @keywords split
+#' @export train_test_split
+
+train_test_split <- function(filename) {
+  babylist <- list()
+  clean_df <- data_clean_off(filename)
   shuffled <- split_shuffle(clean_df)
   trained_df <- train_df(shuffled)
   tester_df <- test_df(shuffled)
@@ -434,6 +617,36 @@ evaluate_viterbi <- function(vpred_list, varhide, varobs, typet) {
 #' @export read_data_in
 
 read_data_in <- function(names_list) {
+  tts_list <- list()
+  for(i in 1:length(names_list)) {
+    tts_list[[i]] <- train_test_split(names_list[[i]])
+  }
+  return(tts_list)
+}
+
+#' A Data Reader FOR MATCH SIDES
+#'
+#' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables.
+#' @param names_list list of filepath names.
+#' @keywords read
+#' @export read_data_in
+
+read_data_in_match <- function(names_list) {
+  tts_list <- list()
+  for(i in 1:length(names_list)) {
+    tts_list[[i]] <- train_test_split(names_list[[i]])
+  }
+  return(tts_list)
+}
+
+#' A Data Reader FOR OFF SIDES
+#'
+#' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables.
+#' @param names_list list of filepath names.
+#' @keywords read
+#' @export read_data_in
+
+read_data_in_off <- function(names_list) {
   tts_list <- list()
   for(i in 1:length(names_list)) {
     tts_list[[i]] <- train_test_split(names_list[[i]])
