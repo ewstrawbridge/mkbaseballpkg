@@ -211,9 +211,10 @@ data_clean_off <- function(file) {
 #' @export split_shuffle
 
 split_shuffle <- function(df) {
+  set.seed(420)
   # shuffling the at bats
   splitdf <- split(df, f=df$aber)
-  shuffled_data <- list_shuffle(splitdf, seed=420)
+  shuffled_data <- splitdf[sample(length(splitdf))]
   return(shuffled_data)
 }
 
@@ -369,7 +370,7 @@ firstpitches <- function(df, stats, pitchchoice) {
 get_listg <- function(lst_train, varb) {
   trained = list()
   for(i in 1:length(lst_train)) {
-    addit <- pull(lst_train[[i]], .data[[varb]])
+    addit <- pull(lst_train[[i]], varb)
     trained[[i]] <- addit
   }
   return(trained)
