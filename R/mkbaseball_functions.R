@@ -68,7 +68,7 @@ data_clean <- function(file) {
 
 #' A Data Cleaning Function FOR MATCH SIDES
 #'
-#' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat.
+#' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat, and by matching pitcher/batter handedness.
 #' @param file filename from your wokring directory, ex '/data/wheeler.csv'.
 #' @keywords clean
 #' @export data_clean_match
@@ -136,7 +136,7 @@ data_clean_match <- function(file) {
 
 #' A Data Cleaning Function FOR OFF SIDES
 #'
-#' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat.
+#' This function cleans files downloaded directly from a statcast search on baseballsavant.mlb.com. Example search: https://baseballsavant.mlb.com/statcast_search?hfPT=&hfAB=&hfGT=R%7C&hfPR=&hfZ=&hfStadium=&hfBBL=&hfNewZones=&hfPull=&hfC=&hfSea=2025%7C&hfSit=&player_type=pitcher&hfOuts=&home_road=&pitcher_throws=&batter_stands=&hfSA=&hfEventOuts=&hfEventRuns=&game_date_gt=&game_date_lt=&hfMo=&hfTeam=&hfOpponent=&hfRO=&position=&hfInfield=&hfOutfield=&hfInn=&hfBBT=&hfFlag=&metric_1=&group_by=name&min_pitches=2000&min_results=25&min_pas=0&sort_col=xwoba&player_event_sort=api_p_release_speed&sort_order=asc&chk_stats_abs=on&chk_stats_hits=on&chk_stats_xwoba=on#results where for each player, click "Graphs" (far right) and then click "Download as CSV". Splits sequences by at-bat, and by mismatching pitcher/batter handedness..
 #' @param file filename from your wokring directory, ex '/data/wheeler.csv'.
 #' @keywords clean
 #' @export data_clean_off
@@ -273,7 +273,7 @@ train_test_split <- function(filename) {
 
 #' A Train/Test Splitter FOR MATCH SIDES
 #'
-#' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list.
+#' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list, by matching pitcher/batter handedness.
 #' @param filename large list shuffled using `split_shuffle()`.
 #' @keywords split
 #' @export train_test_split_match
@@ -296,7 +296,7 @@ train_test_split_match <- function(filename) {
 
 #' A Train/Test Splitter FOR OFF SIDES
 #'
-#' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list.
+#' This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in `data_clean()`, and splits into 70% training and 30% testing data. Results in large list containing player name, cleaned df, training list, and testing list, by mismatching pitcher/batter handedness.
 #' @param filename large list shuffled using `split_shuffle()`.
 #' @keywords split
 #' @export train_test_split_off
@@ -627,7 +627,7 @@ read_data_in <- function(names_list) {
 
 #' A Data Reader FOR MATCH SIDES
 #'
-#' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables.
+#' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables, by matching pitcher/batter handedness.
 #' @param names_list list of filepath names.
 #' @keywords read
 #' @export read_data_in_match
@@ -642,7 +642,7 @@ read_data_in_match <- function(names_list) {
 
 #' A Data Reader FOR OFF SIDES
 #'
-#' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables.
+#' This function reads data in from a list of filenames, can just be copied by going to finder and selecting the lot of them. From here on out, evaluation of the multiple pitchers is done in clumps and all data, evaluations, models, and results will exist in a large nested list specific to the pairing of hidden/observed variables, and by mismatching pitcher/batter handedness.
 #' @param names_list list of filepath names.
 #' @keywords read
 #' @export read_data_in_off

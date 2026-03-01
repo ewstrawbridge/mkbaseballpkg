@@ -10,6 +10,6 @@ train_test_split_off(filename)
 \item{filename}{large list shuffled using \code{split_shuffle()}.}
 }
 \description{
-This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in \code{data_clean()}, and splits into 70\% training and 30\% testing data. Results in large list containing player name, cleaned df, training list, and testing list.
+This function takes in a file downloaded directly from a statcast search on baseballsavant.mlb.com, per instructions in \code{data_clean()}, and splits into 70\% training and 30\% testing data. Results in large list containing player name, cleaned df, training list, and testing list, by mismatching pitcher/batter handedness.
 }
 \keyword{split}
