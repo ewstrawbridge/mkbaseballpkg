@@ -99,10 +99,11 @@ Using this method will allow us to check pitch and next-pitch pairs which are co
 
 
 Finally, we will use the *Smith-Waterman Algorithm* to discover what portion of the predicted sequence matches best with the actual sequence.
-The Smith-Waterman algorithm was developed to compare genetic sequences and find optimal local alignments, that is, portions of an entire sequence that aligned best out of the entire sequence^[@smith-waterman]. 
+The Smith-Waterman algorithm was developed to compare genetic sequences and find optimal local alignments, that is, portions of an entire sequence that aligned best out of the entire sequence. 
 It involves a scoring matrix, rewarding matches and penalizing mismatches.
 The matrix is size $(N+1) \times (M+1)$ where $N$ is the length of the first sequence and $M$ is the length of the second sequence, with the first row and column filled out with zeros.
 At each step, it chooses the maximum point reward of either moving right, down, or diagonally along the sequence, where the points are chosen by a match or a mismatch between the row/column entry of either sequence. 
+More information can be found [here](https://en.wikipedia.org/w/index.php?title=Smith%E2%80%93Waterman_algorithm&oldid=1281063949) and [here](https://vlab.amrita.edu/?sub=3&brch=274&sim=1433&cnt=1).
 
 
 After the scoring matrix is filled, we walk backwards through the sequence starting at the highest value and picking the maximal point path until we reach zero.
