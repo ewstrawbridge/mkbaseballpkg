@@ -143,7 +143,7 @@ data_clean_match <- function(file) {
 
 data_clean_off <- function(file) {
   df <- read.csv(file) %>%
-    select(player_name, batter, game_type, pitch_type, balls, stand, p_throws) %>%
+    select(player_name, batter, game_type, pitch_type, balls, strikes, stand, p_throws) %>%
     # we only want regular season games and off sides
     filter(game_type == "R", stand == p_throws) %>%
     # getting my variables in order
