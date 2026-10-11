@@ -145,7 +145,7 @@ data_clean_off <- function(file) {
   df <- read.csv(file) %>%
     select(player_name, batter, game_type, pitch_type, balls, strikes, stand, p_throws) %>%
     # we only want regular season games and off sides
-    filter(game_type == "R", stand == p_throws) %>%
+    filter(game_type == "R", stand != p_throws) %>%
     # getting my variables in order
     mutate(ct = paste(balls, strikes, sep = "_"),
            ct_red = case_when(
